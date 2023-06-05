@@ -9,8 +9,13 @@ app = FastAPI()
 @app.get("/")
 def read_root():
     print(f'Hello at {time.time()}')
-    paraphrase('cpu2',"Have 11 years' experience in print and digital media. Write on politics, defence and world affairs, and have a keen eye for human-interest stories.")
     return {"Hello": "World"}
+
+@app.get("/test")
+def start_test():
+    print('Starting paraphrase')
+    output = paraphrase('cpu2',"Have 11 years' experience in print and digital media. Write on politics, defence and world affairs, and have a keen eye for human-interest stories.")
+    return {"Paraphrase": output}
 
 @app.post('/')
 async def get_body(request: Request):

@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+.space
+
+# env variables
+space-login
+.modal.toml

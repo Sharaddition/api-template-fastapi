@@ -1,5 +1,6 @@
 import modal
 import pymongo
+from threading import Thread
 from pymongo import MongoClient
 
 # Handles MongoDB to store paraphrase
@@ -13,15 +14,16 @@ def store_pp(os, pp, tt, ml):
 
 # Handles modal inference server for paraphrase generation
 def paraphrase(model, sentence):
-    if model == 'cpu':
+    if model == 'onnx':
         pp_fn = modal.Function.lookup("onnx-pp-cpu", "ParaphraseGenerator.run_inference")
     elif model == 'gpu':
         pp_fn = modal.Function.lookup("pp-gpu", "Generator.run_inference")
-    else:
+    elif model == 'cpu':
         pp_fn = modal.Function.lookup("pp-cpu", "Generator.run_inference")
     try:
-        output = pp_fn.call(sentence)
-        store_pp(sentence, output[0][0], output[1], model)
+        output = pp_fn.call(sentence)[0][0]
+        Thread(target=store_pp, args=[sentence, output[0][0], output[1], model]).start()
     except Exception as err:
-        print(err)
+        output = [[sentence]]
+        print('PP Error:',err)
     return output[0][0]

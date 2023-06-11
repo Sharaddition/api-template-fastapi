@@ -1,5 +1,4 @@
 import modal
-import pymongo
 from threading import Thread
 from pymongo import MongoClient
 

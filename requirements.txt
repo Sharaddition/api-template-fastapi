@@ -1,6 +1,4 @@
-fastapi
-pydantic
-starlette
-uvicorn
+flask
+gunicorn
 modal-client
 pymongo

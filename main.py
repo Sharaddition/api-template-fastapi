@@ -1,8 +1,8 @@
 import time
-from handler import create_article
-from flask import Flask, request
-# from fastapi import FastAPI, Request
 from ml import paraphrase
+from flask import Flask, request
+from handler import create_article
+# from fastapi import FastAPI, Request
 
 app = Flask(__name__)
 
@@ -24,11 +24,8 @@ def get_body():
     # json_body   = await request.json()
     data = request.json
     if data.get('api_key') == "rfwerf":
-        print('Orginal:', data.get('text'))
         pp_article = create_article(data.get('text'))
         ret_data   = {'code': 200, 'text': pp_article}
-        print('Paraphrased:')
-        print(pp_article)
     else:
         print('API key not matched!')
         ret_data = {'code': 404, 'text': 'API key not found in DB.'}
@@ -39,4 +36,4 @@ def get_body():
 #     return {"item_id": item_id}
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int("5000"), debug=True)
+    app.run(host="0.0.0.0", port=int("5000"), debug=False)

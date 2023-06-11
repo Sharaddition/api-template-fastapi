@@ -1,6 +1,7 @@
 import re
 from ml import paraphrase
 from threading import Thread
+
 # Function to split html and sentences
 
 def split_html(html):
@@ -42,8 +43,7 @@ def create_article(raw_content):
     for line in texts:
         if len(line) >= min_len:
             # 2. Send quality sentences for paraphrasing
-            # pp_out = send_to_pp(line)
-            pp_out = line
+            pp_out = send_to_pp(line)
         else:
             # 2. Else return back poor qual lines.
             pp_out = line

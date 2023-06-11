@@ -5,6 +5,6 @@ micros:
     src: ./
     engine: python3.9
     primary: true
-    run: uvicorn main:app
+    run: gunicorn wsgi:app
     public_routes:
       - "/*"

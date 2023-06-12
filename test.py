@@ -1,3 +1,4 @@
+import re
 import time
 from threading import Thread
 
@@ -21,4 +22,11 @@ def compare_thread():
     print('Time Elapsed:', time.time()-start_time)
     # print(thread1, thread2, no_fn)
 
-compare_thread()
+def find_link(text):
+    pattern = r"\b(?:https?|http|ftp):\/\/\S+\b"
+    has_link = re.search(pattern, text)
+    return has_link
+
+
+text = '<a href="http://www.w3schools.com">Visit W3Schools</a>'
+print(find_link(text))

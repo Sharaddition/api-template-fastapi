@@ -1,5 +1,4 @@
 import time
-from ml import paraphrase
 from flask import Flask, request
 from handler import create_article
 # from fastapi import FastAPI, Request

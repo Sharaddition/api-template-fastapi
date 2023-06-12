@@ -20,7 +20,7 @@ def paraphrase(model, sentence):
     elif model == 'cpu':
         pp_fn = modal.Function.lookup("pp-cpu", "Generator.run_inference")
     try:
-        output = pp_fn.call(sentence)[0][0]
+        output = pp_fn.call(sentence)
         Thread(target=store_pp, args=[sentence, output[0][0], output[1], model]).start()
     except Exception as err:
         output = [[sentence]]

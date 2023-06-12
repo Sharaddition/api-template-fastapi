@@ -11,10 +11,18 @@ def split_html(html):
     html_list = []
     for match in matches:
         start = match.start()
-        end = match.end()
+        end   = match.end()
         html_list.append(html[start:end])
 
     return html_list
+
+
+# Function to detect links in a sentrence
+
+def has_link(text):
+    pattern = r"\b(?:https?|http|ftp):\/\/\S+\b"
+    has_url = re.search(pattern, text)
+    return has_url
 
 
 # Function to get Paraphrases from ML model
@@ -43,7 +51,12 @@ def create_article(raw_content):
     for line in texts:
         if len(line) >= min_len:
             # 2. Send quality sentences for paraphrasing
-            pp_out = send_to_pp(line)
+            if has_link(line):
+                # 2.1 Check if contains any URL
+                pp_out = line
+            else:
+                # 2.2 Otherwise qualified for paraphrasing
+                pp_out = send_to_pp(line)
         else:
             # 2. Else return back poor qual lines.
             pp_out = line

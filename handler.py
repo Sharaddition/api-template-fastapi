@@ -27,7 +27,7 @@ def has_link(text):
 
 # Function to get Paraphrases from ML model
 
-def send_to_pp(text):
+def rephrase(text):
     # Create thread to simultaneously call all models 
     ml1 = Thread(target=paraphrase, args=['cpu',text])
     ml2 = Thread(target=paraphrase, args=['onnx',text])
@@ -56,7 +56,7 @@ def create_article(raw_content):
                 pp_out = line
             else:
                 # 2.2 Otherwise qualified for paraphrasing
-                pp_out = send_to_pp(line)
+                pp_out = rephrase(line)
         else:
             # 2. Else return back poor qual lines.
             pp_out = line

@@ -1,28 +1,6 @@
-import re
+import regex
 from ml import paraphrase
 from threading import Thread
-
-# Function to split html and sentences
-
-def split_html(html):
-    pattern = re.compile(r'<[^>]+>|[^<]+')
-    matches = pattern.finditer(html)
-
-    html_list = []
-    for match in matches:
-        start = match.start()
-        end   = match.end()
-        html_list.append(html[start:end])
-
-    return html_list
-
-
-# Function to detect links in a sentrence
-
-def has_link(text):
-    pattern = r"\b(?:https?|http|ftp):\/\/\S+\b"
-    has_url = re.search(pattern, text)
-    return has_url
 
 
 # Function to get Paraphrases from ML model
@@ -43,20 +21,26 @@ def rephrase(text):
 # Manages the HTML and Text to create final article
 
 def create_article(raw_content):
-    # 1. Clean the html
-    texts = split_html(raw_content)
+    # 0. Clean the html
+    texts = regex.split_html(raw_content)
 
-    min_len = 95                  # Min text length to pp
     paraphrased_article = ''      # Final pp article
     for line in texts:
-        if len(line) >= min_len:
+        pp_out = ''
+        # 1. Trim the HTML tags
+        if len(line) >= regex.min_pp_len:
             # 2. Send quality sentences for paraphrasing
-            if has_link(line):
+            if regex.has_link(line):
                 # 2.1 Check if contains any URL
                 pp_out = line
             else:
                 # 2.2 Otherwise qualified for paraphrasing
-                pp_out = rephrase(line)
+                if regex.is_html(' '.join(line.split())):
+                    # 2.21 If is HTML than pass the sentence
+                    pp_out = line
+                else:
+                    # 2.22 Qualified sentence for paraphrasing
+                    pp_out = rephrase(' '.join(line.split()))
         else:
             # 2. Else return back poor qual lines.
             pp_out = line

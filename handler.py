@@ -5,6 +5,7 @@ from threading import Thread
 
 # Manages the HTML and Text to create final article
 
+max_pp_len = 800
 def create_article(raw_content):
     # 0. Clean the html
     texts = regex.split_html(raw_content)
@@ -13,8 +14,9 @@ def create_article(raw_content):
     for line in texts:
         pp_out = ''
         # 1. Trim the HTML tags
-        if len(line) >= regex.min_pp_len:
-            # 2. Send quality sentences for paraphrasing
+        line_len = len(line)
+        if line_len >= regex.min_pp_len and line_len <= max_pp_len:
+            # 2. Check if sentence is of appropriate length
             if regex.has_link(line):
                 # 2.1 Check if contains any URL
                 pp_out = line

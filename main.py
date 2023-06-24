@@ -2,7 +2,6 @@ import time
 import logging
 from flask import Flask, request
 from handler import create_article
-# from fastapi import FastAPI, Request
 
 logging.basicConfig(filename="api.log",
                     format='%(asctime)s %(message)s',
@@ -24,8 +23,6 @@ def read_root():
 def get_body():
     logger.info(">> New Post >>")
     start_time = time.time()
-    # string_body = await request.body()
-    # json_body   = await request.json()
     data = request.json
     if data.get('api_key') == "rfwerf":
         raw_text = data.get('text')
@@ -36,14 +33,11 @@ def get_body():
     else:
         print('API key not matched!')
         logger.warning("Someone else got API URL")
-        ret_data = {'code': 404, 'text': 'API key not found in DB.'}
+        ret_data = {'code': 404, 'text': 'Invalid API Key'}
     total_time = str(time.time() - start_time)[:4]
     logger.info(f"TT: {total_time} secs.")
     return ret_data
 
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int):
-#     return {"item_id": item_id}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=False)

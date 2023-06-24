@@ -1,3 +1,4 @@
+import time
 import modal
 from threading import Thread
 from pymongo import MongoClient
@@ -6,22 +7,17 @@ from pymongo import MongoClient
 cluster = MongoClient("mongodb+srv://najnar:najnar%400909@paraphrases.anbvazf.mongodb.net/?retryWrites=true&w=majority")
 
 def store_pp(os, pp, tt, ml):
-    db = cluster["paraphrases"]
-    collection = db["list"]
-    collection.insert_one({"os":os, "pp":pp, "tt":tt, 'ml': ml})
+    db = cluster["pbdb"]
+    collection = db['cpu']
+    collection.insert_one({"date":time.time(),"os":os, "pp":pp, "len":len(os),"tt":tt})
 
 
 # Handles modal inference server for paraphrase generation
-def paraphrase(model, sentence):
-    if model == 'onnx':
-        pp_fn = modal.Function.lookup("onnx-pp-cpu", "ParaphraseGenerator.run_inference")
-    elif model == 'gpu':
-        pp_fn = modal.Function.lookup("pp-gpu", "Generator.run_inference")
-    elif model == 'cpu':
-        pp_fn = modal.Function.lookup("pp-cpu", "Generator.run_inference")
+def paraphrase(sentence):
+    pp_fn = modal.Function.lookup("pp-cpu", "Generator.run_inference")
     try:
         output = pp_fn.call(sentence)
-        Thread(target=store_pp, args=[sentence, output[0][0], output[1], model]).start()
+        Thread(target=store_pp, args=[sentence, output[0][0], output[1]]).start()
     except Exception as err:
         output = [[sentence]]
         print('PP Error:',err)

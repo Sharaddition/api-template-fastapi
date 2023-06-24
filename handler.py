@@ -3,21 +3,6 @@ from ml import paraphrase
 from threading import Thread
 
 
-# Function to get Paraphrases from ML model
-
-def rephrase(text):
-    # Create thread to simultaneously call all models 
-    ml1 = Thread(target=paraphrase, args=['cpu',text])
-    ml2 = Thread(target=paraphrase, args=['onnx',text])
-    # Execute all models
-    ml1.start()
-    output = paraphrase('gpu',text)
-    ml2.start()
-    ml1.join()
-    ml2.join()
-    return output
-
-
 # Manages the HTML and Text to create final article
 
 def create_article(raw_content):
@@ -40,7 +25,7 @@ def create_article(raw_content):
                     pp_out = line
                 else:
                     # 2.22 Qualified sentence for paraphrasing
-                    pp_out = rephrase(' '.join(line.split()))
+                    pp_out = paraphrase((' '.join(line.split())).replace('"',"'"))
         else:
             # 2. Else return back poor qual lines.
             pp_out = line

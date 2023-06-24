@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def read_root():
-    print(f'Hello at {time.time()}')
+    print(f'✅ Hello at {time.time()}')
     return {"Hello": "World"}
 
 
@@ -31,7 +31,7 @@ def get_body():
         logger.info(f"PP: {len(pp_article)} chars")
         ret_data   = {'code': 200, 'text': pp_article}
     else:
-        print('API key not matched!')
+        print('❌ API key not matched!')
         logger.warning("Someone else got API URL")
         ret_data = {'code': 404, 'text': 'Invalid API Key'}
     total_time = str(time.time() - start_time)[:4]
